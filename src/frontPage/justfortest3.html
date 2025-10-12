@@ -1,23 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>HTML 表单</title>
 </head>
 <body>
 <form action="">
-<p>这个会消失</p>
-    <span>干员姓名：</span>
-    <input type="text" placeholder="请输入文本的说">
+<p><b>欢迎加入永恒国际私人军事公司</b></p>
+    <label for="username"> 干员姓名：</label>
+    <input type="text" id="username" placeholder="请输入文本的说">
     <br>
-    <p>这个不会消失</p>
-    <span>干员代号：</span>
-    <input type="text" value="夜莺">
+    <p>根据上级通知，您可以选择继承一个已故探员的代号，或重新取一个</p>
+    <label for="codename">干员代号:</label>
+    <input type="text" id="codename" value="夜莺">
+    <br>
+    <label for="pwd"> 登入密码：</label>
+    <input type="password" id="pwd" placeholder="请输入密码">
     <br>
     <label>性别</label>
     <input type="radio" name="gender"> 男
     <input type="radio" name="gender"> 女
     <input type="radio" name="gender"> 武装直升机
+    <br>
+    <label>您期望使用的武器类型：</label>
+    <input type="checkbox" name="perferweapon"> 压制类武器
+    <input type="checkbox" name="perferweapon"> 精准类武器
+    <input type="checkbox" name="perferweapon"> 战术类武器
+    <input type="checkbox" name="perferweapon"> 特殊类武器
+
+    <br>
+    <input type="submit" value="完成入职">
     
 </form>
 
