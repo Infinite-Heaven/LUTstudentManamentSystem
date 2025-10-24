@@ -16,4 +16,6 @@ public class CourseSelection {
     @Column(name = "course_id")
     int courseId;
 
+    int score;
+
 }
