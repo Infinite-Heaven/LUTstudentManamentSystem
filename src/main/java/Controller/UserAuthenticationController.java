@@ -24,17 +24,21 @@ public class UserAuthenticationController {
     @GetMapping("/login")
     public String login(@RequestParam("username") String username, @RequestParam("password") String password) {
         if(userService.getUserByUsernameAndPassword(username, password) != null) {
-            return "用户查询成功";
+            return "登录成功";
         }else {
-            return null;
+            return "用户名或密码错误";
         }
     }
 
     //管理员管理用户接口（即删除已经存在的老师/学生 用户）
     @DeleteMapping("/delete/{username}")
     public String deleteUser(@PathVariable("username") String username) {
-        userService.deleteUser(userService.getUserByUsername(username));
-        return "用户删除成功";
-
+        User user = userService.getUserByUsername(username);
+        if (user != null) {
+            userService.deleteUser(user);
+            return "用户删除成功";
+        } else {
+            return "用户不存在";
+        }
     }
 }

@@ -15,9 +15,13 @@ public class SelectCourseController {
     CourseSelectService courseSelectService;
 
     @PutMapping("/selectOneCourse")
-    public String selectCourse(Integer studentId, Integer courseId) {
-        courseSelectService.chooseOneCourse(studentId, courseId);
-        return "选课完毕";
+    public String selectCourse(@RequestParam Integer studentId, @RequestParam Integer courseId) {
+        if (studentId != null && courseId != null) {
+            courseSelectService.chooseOneCourse(studentId, courseId);
+            return "选课成功";
+        } else {
+            return "参数错误：学生ID和课程ID不能为空";
+        }
     }
     @DeleteMapping("/deleteCourseSelection/{student_id}/{course_id}")
     public String deleteCourseSelection(@PathVariable("student_id") Integer studentId, @PathVariable Integer courseId) {
