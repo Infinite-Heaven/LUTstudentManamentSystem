@@ -22,11 +22,14 @@ public class UserAuthenticationController {
 
     //用户登录接口
     @GetMapping("/login")
-    public String login(@RequestParam("username") String username, @RequestParam("password") String password) {
-        if(userService.getUserByUsernameAndPassword(username, password) != null) {
-            return "登录成功";
+    public User login(@RequestParam("username") String username, @RequestParam("password") String password) {
+        User user = userService.getUserByUsernameAndPassword(username, password);
+        if(user != null) {
+            // 不返回密码
+            user.setPassword(null);
+            return user;
         }else {
-            return "用户名或密码错误";
+            return null;
         }
     }
 
@@ -40,5 +43,24 @@ public class UserAuthenticationController {
         } else {
             return "用户不存在";
         }
+    }
+
+    //修改密码接口
+    @PutMapping("/updatePassword")
+    public String updatePassword(@RequestParam String username, 
+                                 @RequestParam String oldPassword, 
+                                 @RequestParam String newPassword) {
+        return userService.updatePassword(username, oldPassword, newPassword);
+    }
+
+    //根据用户名获取用户信息（用于管理员搜索）
+    @GetMapping("/getByUsername")
+    public User getUserByUsername(@RequestParam String username) {
+        User user = userService.getUserByUsername(username);
+        if (user != null) {
+            // 不返回密码
+            user.setPassword(null);
+        }
+        return user;
     }
 }

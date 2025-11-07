@@ -1,52 +1,88 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="stylesheet" href="indexx.css">
-    <title>注册desuwa</title>
+    <title>用户注册 - 学生成绩管理系统</title>
+    <style>
+        .role-select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        .fn {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .fn a {
+            text-decoration: none;
+            color: #3498db;
+            margin: 0 10px;
+        }
+        .fn a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
 <div class="box">
     <div class="left"></div>
     <div class="right">
         <h4>注 册</h4>
-        <form id="register-form" action=" http://localhost:8089/user/register" method="POST">
-            <input class = "acc" type="text" name="username" placeholder="用户名">
-            <input class = "acc" type="password" name="password" placeholder="密码">
-            <input class = "submit" type="submit" value="Sign in">
+        <form id="register-form" action="http://localhost:8089/user/register" method="POST">
+            <input class="acc" type="text" name="username" id="username" placeholder="用户名" required>
+            <input class="acc" type="password" name="password" id="password" placeholder="密码" required>
+            <select class="role-select" name="role" id="role" required>
+                <option value="">请选择角色</option>
+                <option value="student">学生</option>
+                <option value="teacher">教师</option>
+                <option value="admin">管理员</option>
+            </select>
+            <input class="submit" type="submit" value="注册">
         </form>
         <div class="fn">
-<!--            <a href="http://localhost:63342/LUTstudentManamentSystem/studentGradeManagmentSystem/src/frontPage/%E7%99%BB%E9%99%86%E7%95%8C%E9%9D%A2.html?_ijt=tf3eav9b4mmt1orerk3u9gisj6&_ij_reload=RELOAD_ON_SAVE;">返回登录</a>-->
-            <form action="登陆界面.html">
-                <button onclick="location.href='登陆界面.html'" href="javascript:;">返回登陆</button>
-            </form>
-            <a href="javascript:;">找回密码</a>
+            <a href="登陆界面.html">返回登录</a>
+            <span>|</span>
+            <a href="javascript:void(0);" onclick="alert('找回密码功能暂未开放，请联系管理员')">找回密码</a>
         </div>
-
     </div>
 </div>
 
-</body>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const form = document.getElementById('register-form');
         if (!form) return;
+        
         form.addEventListener('submit', async function (e) {
             e.preventDefault();
-            const formData = new FormData(form);
-            const payload = {
-                username: (formData.get('username') || '').trim(),
-                password: (formData.get('password') || '').trim()
-                // 可按需增加: role: 'student'
-            };
-            if (!payload.username || !payload.password) {
+            
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const role = document.getElementById('role').value;
+            
+            if (!username || !password) {
                 alert('用户名和密码不能为空');
                 return;
             }
-            const url = (form.getAttribute('action') || '').trim() || 'http://localhost:8089/user/register';
+            
+            if (!role) {
+                alert('请选择用户角色');
+                return;
+            }
+            
+            const payload = {
+                username: username,
+                password: password,
+                role: role
+            };
+            
+            const url = 'http://localhost:8089/user/register';
+            
             try {
                 const resp = await fetch(url, {
                     method: 'POST',
@@ -54,10 +90,17 @@
                     body: JSON.stringify(payload)
                 });
                 const text = await resp.text();
-                alert(text || '提交成功');
+                
+                if (text === '用户添加成功') {
+                    alert('注册成功！请登录');
+                    // 注册成功后跳转到登录页面
+                    window.location.href = '登陆界面.html';
+                } else {
+                    alert(text || '注册失败，请检查输入信息');
+                }
             } catch (err) {
                 console.error(err);
-                alert('请求失败，请稍后重试');
+                alert('注册请求失败，请检查网络连接或后端服务是否启动');
             }
         });
     });

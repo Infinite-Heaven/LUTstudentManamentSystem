@@ -4,6 +4,9 @@ import Service.ScoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/scoreManagement")
 @CrossOrigin(origins = "*")
@@ -20,6 +23,7 @@ public class ScoreManagementController {
             return "成绩必须在0-100之间";
         }
     }
+    
     @GetMapping("/getScore")
     public String getScore(@RequestParam int StudentId, @RequestParam int CourseId) {
         int score = scoreService.getScore(StudentId, CourseId);
@@ -29,4 +33,9 @@ public class ScoreManagementController {
         return "成绩：" + score;
     }
 
+    // 批量导入成绩
+    @PostMapping("/batchImport")
+    public String batchImportScores(@RequestParam int courseId, @RequestBody List<Map<String, Object>> scores) {
+        return scoreService.batchImportScores(courseId, scores);
+    }
 }

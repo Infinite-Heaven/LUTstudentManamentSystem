@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="stylesheet" href="index.css">
-    <title>登录desuwa</title>
+    <title>用户登录 - 学生成绩管理系统</title>
 </head>
 
 <body>
@@ -15,22 +15,60 @@
         <div class="right">
             <h4>登 录</h4>
             <form id="Login-form" action="http://localhost:8089/user/login" method="get">
-            <input class = "acc" type="text" name="username" placeholder="用户名">
-            <input class = "acc" type="password" name="password" placeholder="密码">
-<!--            <input  class = "submit" type="submit" value="Login">-->
-                <form action="内部表单.html">
-                    <button class="submit" onclick="location.href='内部表单.html'" href="javascript:;">Login</button>
-                </form>
+                <input class="acc" type="text" name="username" id="username" placeholder="用户名" required>
+                <input class="acc" type="password" name="password" id="password" placeholder="密码" required>
+                <input class="submit" type="submit" value="Login">
             </form>
             <div class="fn">
-                <form action="注册界面.html">
-                    <button onclick="location.href='注册界面.html'" href="javascript:;">注册账号</button>
-                </form>
-<!--                <a href="http://localhost:63342/LUTstudentManamentSystem/studentGradeManagmentSystem/src/frontPage/%E6%B3%A8%E5%86%8C%E7%95%8C%E9%9D%A2.html?_ijt=nd4h8bole2clnb60vcnco4lste&_ij_reload=RELOAD_ON_SAVE;">注 册</a>-->
-                <a href="javascript:;">找回密码</a>
+                <a href="注册界面.html" style="text-decoration: none; color: #3498db;">注册账号</a>
+                <span style="margin: 0 10px;">|</span>
+                <a href="javascript:void(0);" onclick="alert('找回密码功能暂未开放，请联系管理员')" style="text-decoration: none; color: #7f8c8d;">找回密码</a>
             </div>
+        </div>
+    </div>
 
-        </div>
-        </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('Login-form');
+            if (!form) return;
+            
+            form.addEventListener('submit', async function (e) {
+                e.preventDefault();
+                
+                const username = document.getElementById('username').value.trim();
+                const password = document.getElementById('password').value.trim();
+                
+                if (!username || !password) {
+                    alert('请输入用户名和密码');
+                    return;
+                }
+                
+                const url = `http://localhost:8089/user/login?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;
+                
+                try {
+                    const resp = await fetch(url, { method: 'GET' });
+                    const user = await resp.json();
+                    
+                    if (user && user.id) {
+                        // 保存登录状态和用户信息
+                        sessionStorage.setItem('isLoggedIn', 'true');
+                        sessionStorage.setItem('username', username);
+                        sessionStorage.setItem('userId', user.id);
+                        sessionStorage.setItem('userRole', user.role || 'student');
+                        sessionStorage.setItem('loginTime', new Date().getTime().toString());
+                        
+                        alert('登录成功！');
+                        // 登录成功后跳转到管理系统
+                        window.location.href = '管理系统.html';
+                    } else {
+                        alert('登录失败，请检查用户名和密码');
+                    }
+                } catch (err) {
+                    console.error(err);
+                    alert('登录请求失败，请检查网络连接或后端服务是否启动');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
